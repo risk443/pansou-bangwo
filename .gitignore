@@ -1,0 +1,14 @@
+# build outputs
+backend/pansou-bangwo
+backend/cache/
+backend/logs/
+frontend/dist/
+frontend/node_modules/
+
+# env / secrets
+.env
+.env.*
+*.local
+
+# tooling
+.DS_Store
