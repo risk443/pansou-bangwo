@@ -80,14 +80,15 @@ const hasResults = computed(() => {
   return diskTypes.value.length > 0;
 });
 
-// 判断是否显示空状态（无结果且已完成搜索）
+// 判断是否显示空状态（无结果且初始请求已完成）
+// 后台插件还可能继续刷新，但不能让 0 结果页面一直卡在“正在搜索”。
 const showEmptyState = computed(() => {
-  return !hasResults.value && props.hasSearched && !props.isActivelySearching;
+  return !hasResults.value && props.hasSearched && !props.loading;
 });
 
-// 判断是否显示搜索中状态（无结果但正在搜索）
+// 判断是否显示搜索中状态（只有首个请求还在 loading 时显示）
 const showSearchingState = computed(() => {
-  return !hasResults.value && props.hasSearched && props.isActivelySearching;
+  return !hasResults.value && props.hasSearched && props.loading;
 });
 
 // 判断是否显示初始状态（未搜索）
