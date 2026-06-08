@@ -12,3 +12,6 @@ frontend/node_modules/
 
 # tooling
 .DS_Store
+.wrangler/
+.state/
+*.log
