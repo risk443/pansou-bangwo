@@ -93,5 +93,5 @@ CHANNELS=tgsearchers7 \
 - 前端 dev server 已可访问
 - 前端 `/api/health` 代理到后端已验证通过
 - 正式站 `https://pansou-bangwo.pages.dev/` 已可访问
-- 验收搜索：正式站搜 `四级` 必须显示资源；当前返回 3 条 `英语四级 / CET4` 相关结果
+- 验收搜索：正式站搜 `四级` 必须显示真实网盘资源；当前返回 8 条 `英语四级 / CET4` 相关盘链，覆盖百度、夸克、移动、迅雷
 - 搜索 smoke test 已返回正常 JSON
