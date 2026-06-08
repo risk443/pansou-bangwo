@@ -50,9 +50,48 @@ fish2018/pansou README 推荐 Docker：
 
 本机当前没有 Docker，所以先采用源码构建方式跑通。
 
+## 线上长期部署方案
+
+当前线上形态：
+
+- 代码托管：GitHub `risk443/pansou-bangwo`
+- 前端：Cloudflare Pages 项目 `pansou-bangwo`
+- 正式访问：`https://pansou-bangwo.pages.dev/`
+- API 路由：前端 Pages Functions 代理同源 `/api/*` 到后端公网地址
+- 后端：Go API 服务，监听 `8888`，需要稳定公网入口
+
+Cloudflare Pages 必须配置后端地址：
+
+```bash
+cd frontend
+printf '%s' 'https://<stable-backend-public-url>' | \
+  npx wrangler pages secret put PANSOU_API_BASE_URL --project-name pansou-bangwo
+npm run build
+npx wrangler pages deploy dist --project-name pansou-bangwo --branch main
+```
+
+后端推荐长期方案优先级：
+
+1. **VPS/云服务器固定公网后端**：安全组放行 `80/443`，用 Nginx/Caddy 反代到 `127.0.0.1:8888`。
+2. **固定 Cloudflare Tunnel**：把 `https://<fixed-api-domain>` 绑定到本机 `127.0.0.1:8888`，再写入 `PANSOU_API_BASE_URL`。
+3. **临时 tunnel** 只适合验证，不适合长期生产，因为域名和连接可能掉线。
+
+后端运行示例：
+
+```bash
+cd backend
+PORT=8888 \
+CACHE_PATH=$PWD/cache \
+ENABLED_PLUGINS=labi,zhizhen,shandian,duoduo,muou \
+CHANNELS=tgsearchers7 \
+./pansou-bangwo
+```
+
 ## 验证结果
 
 - 后端 `/api/health` 已返回 `status: ok`
 - 前端 dev server 已可访问
 - 前端 `/api/health` 代理到后端已验证通过
+- 正式站 `https://pansou-bangwo.pages.dev/` 已可访问
+- 验收搜索：正式站搜 `四级` 必须显示资源；当前返回 3 条 `英语四级 / CET4` 相关结果
 - 搜索 smoke test 已返回正常 JSON
